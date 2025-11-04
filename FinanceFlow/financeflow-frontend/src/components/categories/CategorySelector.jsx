@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 const CategorySelector = ({ selectedCategory, selectedSubcategory, onCategoryChange, onSubcategoryChange }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
 
   useEffect(() => {
-    // TODO: Fetch categories from API
     const fetchCategories = async () => {
       try {
-        // const response = await api.getCategories();
-        // setCategories(response.data);
+        const response = await api.getCategories();
+        if (response && response.data) setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -20,11 +20,10 @@ const CategorySelector = ({ selectedCategory, selectedSubcategory, onCategoryCha
 
   useEffect(() => {
     if (selectedCategory) {
-      // TODO: Fetch subcategories for selected category from API
       const fetchSubcategories = async () => {
         try {
-          // const response = await api.getSubcategories(selectedCategory);
-          // setSubcategories(response.data);
+          const response = await api.getSubcategories(selectedCategory);
+          if (response && response.data) setSubcategories(response.data);
         } catch (error) {
           console.error('Error fetching subcategories:', error);
         }

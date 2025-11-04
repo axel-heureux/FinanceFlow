@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost/FinanceFlow/api';
+// Backend API base URL (point to the PHP backend)
+const API_BASE_URL = 'http://localhost/FinanceFlow/backend/api';
 
 const api = {
   // Transactions
@@ -9,7 +10,8 @@ const api = {
   },
 
   async getRecentTransactions() {
-    const response = await fetch(`${API_BASE_URL}/transactions/recent`);
+    // backend currently returns all transactions; frontend can slice if needed
+    const response = await fetch(`${API_BASE_URL}/transactions`);
     if (!response.ok) throw new Error('Failed to fetch recent transactions');
     return response.json();
   },
@@ -42,7 +44,8 @@ const api = {
   },
 
   async getSubcategories(categoryId) {
-    const response = await fetch(`${API_BASE_URL}/categories/${categoryId}/subcategories`);
+    // backend expects subcategories with query param ?category_id=ID
+    const response = await fetch(`${API_BASE_URL}/subcategories?category_id=${encodeURIComponent(categoryId)}`);
     if (!response.ok) throw new Error('Failed to fetch subcategories');
     return response.json();
   },
