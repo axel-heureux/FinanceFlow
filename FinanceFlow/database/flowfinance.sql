@@ -2,24 +2,48 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Base de données : `flowfinance`
---
+-- Hôte : 127.0.0.1:3306
+-- Généré le : mer. 05 nov. 2025 à 12:47
+-- Version du serveur : 9.1.0
+-- Version de PHP : 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
-CREATE DATABASE IF NOT EXISTS `flowfinance`;
-USE `flowfinance`;
-
 --
 -- Base de données : `flowfinance`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `account_balance`
+--
+
+DROP TABLE IF EXISTS `account_balance`;
+CREATE TABLE IF NOT EXISTS `account_balance` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `initial_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `current_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `account_balance`
+--
+
+INSERT INTO `account_balance` (`id`, `user_id`, `initial_balance`, `current_balance`, `last_updated`) VALUES
+(1, 1, 1480.00, 1332.85, '2025-11-05 12:41:52');
 
 -- --------------------------------------------------------
 
@@ -47,9 +71,9 @@ CREATE TABLE IF NOT EXISTS `budgets` (
 --
 
 INSERT INTO `budgets` (`id`, `user_id`, `category_id`, `subcategory_id`, `limit_amount`, `current_amount`, `created_at`) VALUES
-(1, 1, 1, NULL, 500.00, 0.00, '2025-11-04 10:45:43'),
-(2, 1, 2, NULL, 200.00, 0.00, '2025-11-04 10:45:43'),
-(3, 1, 3, NULL, 150.00, 0.00, '2025-11-04 10:45:43');
+(1, 1, 1, NULL, 500.00, 0.00, '2025-11-04 09:45:43'),
+(2, 1, 2, NULL, 200.00, 0.00, '2025-11-04 09:45:43'),
+(3, 1, 3, NULL, 150.00, 0.00, '2025-11-04 09:45:43');
 
 -- --------------------------------------------------------
 
@@ -121,12 +145,20 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `category_id` int NOT NULL,
   `subcategory_id` int DEFAULT NULL,
   `transaction_date` date NOT NULL,
+  `location` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `category_id` (`category_id`),
   KEY `subcategory_id` (`subcategory_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `user_id`, `title`, `description`, `amount`, `category_id`, `subcategory_id`, `transaction_date`, `location`, `created_at`) VALUES
+(3, 1, 'Achat de Trenbolone pour Axel', 'Dose de Tren', -70.00, 3, 6, '2025-11-04', 'Boutique en Ligne ', '2025-11-05 12:15:23');
 
 -- --------------------------------------------------------
 
@@ -150,11 +182,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`) VALUES
-(1, 'Alice Dupont', 'alice@example.com', 'password_hash', '2025-11-04 10:45:43');
+(1, 'Alice Dupont', 'alice@example.com', 'password_hash', '2025-11-04 09:45:43');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-const recentTransactions = transactions.slice(0, 5); // Mets 10 pour en voir 10, etc.
