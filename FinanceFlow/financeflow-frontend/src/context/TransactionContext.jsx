@@ -42,8 +42,11 @@ export const TransactionProvider = ({ children }) => {
   const addTransaction = async (transactionData) => {
     try {
       const response = await api.createTransaction(transactionData);
-      setTransactions(prev => [...prev, response.data]);
-      await fetchBalance();
+      // Si la transaction a été créée, on recharge toute la liste pour éviter les incohérences
+      if (response.success) {
+        await fetchTransactions();
+        await fetchBalance();
+      }
       setError(null);
     } catch (err) {
       setError('Failed to add transaction');

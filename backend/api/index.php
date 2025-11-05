@@ -75,6 +75,20 @@ switch ($path) {
         }
         break;
 
+    case 'balance':
+        require_once __DIR__ . "/controllers/BalanceController.php";
+        $controller = new BalanceController($db);
+        
+        switch ($method) {
+            case 'GET':
+                echo json_encode($controller->getBalance());
+                break;
+            default:
+                http_response_code(405);
+                echo json_encode(["message" => "Méthode non autorisée"]);
+        }
+        break;
+
     default:
         http_response_code(404);
         echo json_encode(["message" => "Route non trouvée"]);

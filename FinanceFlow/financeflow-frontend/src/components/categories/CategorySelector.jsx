@@ -36,13 +36,12 @@ const CategorySelector = ({ selectedCategory, selectedSubcategory, onCategoryCha
   }, [selectedCategory]);
 
   return (
-    <div className="mb-3">
+    <div>
       <div className="mb-3">
-        <label className="form-label">Catégorie</label>
         <select
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="form-select"
+          className="form-select shadow-sm"
           required
         >
           <option value="">Sélectionner une catégorie</option>
@@ -55,14 +54,13 @@ const CategorySelector = ({ selectedCategory, selectedSubcategory, onCategoryCha
       </div>
 
       {selectedCategory && (
-        <div className="mb-3">
-          <label className="form-label">Sous-catégorie</label>
+        <div>
           <select
             value={selectedSubcategory}
             onChange={(e) => onSubcategoryChange(e.target.value)}
-            className="form-select"
+            className="form-select shadow-sm"
           >
-            <option value="">Sélectionner une sous-catégorie</option>
+            <option value="">Sélectionner une sous-catégorie (optionnel)</option>
             {subcategories.map(subcategory => (
               <option key={subcategory.id} value={subcategory.id}>
                 {subcategory.name}

@@ -1,21 +1,89 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+:root {
+  --primary-gradient: linear-gradient(135deg, #4a90e2, #2980b9);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --border-radius: 0.5rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+body {
+  background-color: #f8f9fa;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.card {
+  border-radius: var(--border-radius);
+  transition: transform 0.2s ease-in-out;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.bg-gradient {
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Form Controls */
+.form-control,
+.form-select {
+  border-radius: var(--border-radius);
+  border: 1px solid #dee2e6;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.btn {
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Transaction Specific */
+.transaction-amount {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.transaction-date {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Custom max-width for forms */
+.max-width-500 {
+  max-width: 500px;
+  width: 100%;
+}
+
+/* Responsive Container */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 960px;
+  }
 }
 
 @keyframes logo-spin {
