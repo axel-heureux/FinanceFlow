@@ -96,6 +96,9 @@ switch ($resource) {
             case 'GET':
                 echo json_encode($controller->getBalance());
                 break;
+            case 'PUT':
+                echo json_encode($controller->updateInitialBalance($data));
+                break;
             default:
                 http_response_code(405);
                 echo json_encode(["message" => "Méthode non autorisée"]);
