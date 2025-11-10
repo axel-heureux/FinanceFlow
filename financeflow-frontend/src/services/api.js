@@ -56,6 +56,18 @@ const api = {
     if (!response.ok) throw new Error('Failed to fetch balance');
     return response.json();
   },
+
+  async updateInitialBalance(initialBalance) {
+    const response = await fetch(`${API_BASE_URL}/balance`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ initial_balance: initialBalance }),
+    });
+    if (!response.ok) throw new Error('Failed to update initial balance');
+    return response.json();
+  },
 };
 
 export default api;

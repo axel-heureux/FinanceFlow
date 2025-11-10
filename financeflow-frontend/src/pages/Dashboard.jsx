@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TransactionList from '../components/transactions/TransactionList';
+import InitialBalanceModal from '../components/balance/InitialBalanceModal';
+import Toast from '../components/ui/Toast';
 import { useTransactions } from '../context/TransactionContext';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { balance, transactions, deleteTransaction } = useTransactions();
+  const { balance, initialBalance, transactions, deleteTransaction, updateInitialBalance } = useTransactions();
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  
   // Affiche les 5 dernières transactions
   const recentTransactions = transactions.slice(0, 5);
+
+  const handleUpdateInitialBalance = async (newBalance) => {
+    try {
+      await updateInitialBalance(newBalance);
+      setToast({
+        show: true,
+        message: 'Solde initial mis à jour avec succès !',
+        type: 'success'
+      });
+    } catch (error) {
+      setToast({
+        show: true,
+        message: 'Erreur lors de la mise à jour du solde initial',
+        type: 'error'
+      });
+      throw error;
+    }
+  };
 
   // Fonction pour formatter le montant avec le signe et la couleur
   const formatAmount = (amount) => {
@@ -38,9 +61,21 @@ const Dashboard = () => {
               <p className={`display-4 fw-bold mb-2 ${balance >= 0 ? 'text-success' : 'text-danger'}`}>
                 {formatAmount(balance)}
               </p>
-              <p className="text-success mb-0">
-                <small><i className="bi bi-piggy-bank me-1"></i>Solde initial : 1 000,00 €</small>
-              </p>
+              <div className="d-flex justify-content-between align-items-center">
+                <p className="text-success mb-0">
+                  <small>
+                    <i className="bi bi-piggy-bank me-1"></i>
+                    Solde initial : {formatAmount(initialBalance || 0)}
+                  </small>
+                </p>
+                <button 
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => setShowBalanceModal(true)}
+                  title="Modifier le solde initial"
+                >
+                  <i className="bi bi-pencil"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -68,6 +103,20 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <InitialBalanceModal
+        show={showBalanceModal}
+        onClose={() => setShowBalanceModal(false)}
+        currentInitialBalance={initialBalance || 0}
+        onUpdate={handleUpdateInitialBalance}
+      />
+
+      <Toast
+        show={toast.show}
+        message={toast.message}
+        type={toast.type}
+        onHide={() => setToast({ ...toast, show: false })}
+      />
     </div>
   );
 };

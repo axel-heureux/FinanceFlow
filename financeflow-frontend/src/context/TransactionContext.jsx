@@ -14,13 +14,16 @@ export const useTransactions = () => {
 export const TransactionProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [initialBalance, setInitialBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchTransactions = async () => {
     try {
       const response = await api.getTransactions();
-      setTransactions(response.data);
+      if (response.success) {
+        setTransactions(response.data);
+      }
       setError(null);
     } catch (err) {
       setError('Failed to fetch transactions');
@@ -31,11 +34,31 @@ export const TransactionProvider = ({ children }) => {
   const fetchBalance = async () => {
     try {
       const response = await api.getBalance();
-      setBalance(response.data);
+      if (response.success) {
+        setBalance(response.data);
+        setInitialBalance(response.initial_balance);
+      }
       setError(null);
     } catch (err) {
       setError('Failed to fetch balance');
       console.error(err);
+    }
+  };
+
+  const updateInitialBalance = async (newInitialBalance) => {
+    try {
+      const response = await api.updateInitialBalance(newInitialBalance);
+      if (response.success) {
+        setInitialBalance(response.data.initial_balance);
+        setBalance(response.data.current_balance);
+        setError(null);
+        return response;
+      }
+      throw new Error(response.message);
+    } catch (err) {
+      setError('Failed to update initial balance');
+      console.error(err);
+      throw err;
     }
   };
 
@@ -84,10 +107,12 @@ export const TransactionProvider = ({ children }) => {
   const value = {
     transactions,
     balance,
+    initialBalance,
     loading,
     error,
     addTransaction,
     deleteTransaction,
+    updateInitialBalance,
     refreshTransactions: fetchTransactions,
     refreshBalance: fetchBalance,
   };
