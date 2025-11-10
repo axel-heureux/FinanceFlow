@@ -32,7 +32,7 @@ const Dashboard = () => {
           <div className="card shadow-sm border-0 bg-gradient h-100">
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="card-title h5 mb-0">Solde actuel</h2>
+                <h2 className="text-dark card-title h5 mb-0">Solde actuel</h2>
                 <i className="bi bi-wallet2 text-primary fs-4"></i>
               </div>
               <p className={`display-4 fw-bold mb-2 ${balance >= 0 ? 'text-success' : 'text-danger'}`}>
