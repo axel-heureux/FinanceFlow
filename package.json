@@ -4,6 +4,7 @@
     "axios": "^1.13.1",
     "bootstrap": "^5.3.8",
     "dotenv": "^17.2.3",
+    "follow-redirects": "^1.15.11",
     "react-router-dom": "^7.9.5"
   }
 }

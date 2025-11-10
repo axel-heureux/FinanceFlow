@@ -82,4 +82,49 @@ class TransactionController {
             return ["success" => false, "message" => $e->getMessage()];
         }
     }
+
+    public function delete($id) {
+        try {
+            $this->conn->beginTransaction();
+
+            // Récupérer le montant de la transaction avant de la supprimer
+            $getQuery = "SELECT amount FROM transactions WHERE id = :id";
+            $getStmt = $this->conn->prepare($getQuery);
+            $getStmt->bindParam(":id", $id);
+            $getStmt->execute();
+            $transaction = $getStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$transaction) {
+                return ["success" => false, "message" => "Transaction non trouvée"];
+            }
+
+            // Supprimer la transaction
+            $deleteQuery = "DELETE FROM transactions WHERE id = :id";
+            $deleteStmt = $this->conn->prepare($deleteQuery);
+            $deleteStmt->bindParam(":id", $id);
+
+            // Mettre à jour le solde (soustraire le montant supprimé)
+            $updateBalance = "UPDATE account_balance 
+                            SET current_balance = current_balance - :amount 
+                            WHERE user_id = 1";
+            $updateStmt = $this->conn->prepare($updateBalance);
+            $updateStmt->bindParam(":amount", $transaction['amount']);
+
+            if ($deleteStmt->execute() && $updateStmt->execute()) {
+                $this->conn->commit();
+                return [
+                    "success" => true,
+                    "message" => "Transaction supprimée avec succès"
+                ];
+            }
+
+            $this->conn->rollBack();
+            return ["success" => false, "message" => "Erreur lors de la suppression de la transaction"];
+        } catch (PDOException $e) {
+            if ($this->conn->inTransaction()) {
+                $this->conn->rollBack();
+            }
+            return ["success" => false, "message" => $e->getMessage()];
+        }
+    }
 }
