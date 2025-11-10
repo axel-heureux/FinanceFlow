@@ -20,6 +20,11 @@ $path = parse_url($request_uri, PHP_URL_PATH);
 $path = str_replace('/FinanceFlow/backend/api/', '', $path);
 $method = $_SERVER['REQUEST_METHOD'];
 
+// Extraire l'ID depuis l'URL si présent (ex: transactions/123)
+$pathParts = explode('/', trim($path, '/'));
+$resource = $pathParts[0];
+$id = isset($pathParts[1]) ? $pathParts[1] : null;
+
 // Récupérer les données envoyées
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -28,7 +33,7 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Router les requêtes
-switch ($path) {
+switch ($resource) {
     case 'transactions':
         require_once __DIR__ . "/controllers/TransactionController.php";
         $controller = new TransactionController($db);
@@ -39,6 +44,14 @@ switch ($path) {
                 break;
             case 'POST':
                 echo json_encode($controller->create($data));
+                break;
+            case 'DELETE':
+                if ($id) {
+                    echo json_encode($controller->delete($id));
+                } else {
+                    http_response_code(400);
+                    echo json_encode(["message" => "ID de transaction requis"]);
+                }
                 break;
             default:
                 http_response_code(405);
